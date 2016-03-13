@@ -276,7 +276,7 @@ public class PriorityQueue<E>
 		queue[k] = x;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private void heapify()
 	{
 		for (int i = (size >>> 1) - 1; i >= 0; i--)
