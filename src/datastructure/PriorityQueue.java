@@ -288,38 +288,6 @@ public class PriorityQueue<E>
 		return comparator;
 	}
 
-	private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException
-	{
-		// Write out element count, and any hidden stuff
-		s.defaultWriteObject();
-
-		// Write out array length, for compatibility with 1.5 version
-		s.writeInt(Math.max(2, size + 1));
-
-		// Write out all elements in the "proper order".
-		for (int i = 0; i < size; i++)
-			s.writeObject(queue[i]);
-	}
-
-	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException
-	{
-		// Read in size, and any hidden stuff
-		s.defaultReadObject();
-
-		// Read in (and discard) array length
-		s.readInt();
-
-		queue = new Object[size];
-
-		// Read in all elements.
-		for (int i = 0; i < size; i++)
-			queue[i] = s.readObject();
-
-		// Elements are guaranteed to be in "proper order", but the
-		// spec has never explained what that might be.
-		heapify();
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static <T> T[] copyOf(T[] original, int newLength)
 	{
