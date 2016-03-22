@@ -1,6 +1,6 @@
 package datastructure;
 
-public class LinkedList<E> 
+public class LinkedList<E>
 {
 	private transient int modCount = 0;
 	transient int size = 0;
@@ -170,6 +170,11 @@ public class LinkedList<E>
 	public int size()
 	{
 		return size;
+	}
+
+	public boolean isEmpty()
+	{
+		return size == 0;
 	}
 
 	public boolean add(E e)
@@ -529,5 +534,15 @@ public class LinkedList<E>
 			a[size] = null;
 
 		return a;
+	}
+
+	public void printList()
+	{
+		Node<E> node = first;
+		while (node != null)
+		{
+			System.out.println(node.item + " ");
+			node = node.next;
+		}
 	}
 }

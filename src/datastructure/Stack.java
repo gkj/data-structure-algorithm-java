@@ -12,7 +12,7 @@ public class Stack<E> extends Vector<E>
 
 		return item;
 	}
-	
+
 	public synchronized E pop()
 	{
 		E obj;
@@ -23,7 +23,7 @@ public class Stack<E> extends Vector<E>
 
 		return obj;
 	}
-	
+
 	public synchronized E peek()
 	{
 		int len = size();
@@ -32,7 +32,7 @@ public class Stack<E> extends Vector<E>
 			throw new RuntimeException("Stack is empty");
 		return elementAt(len - 1);
 	}
-	
+
 	public boolean empty()
 	{
 		return size() == 0;

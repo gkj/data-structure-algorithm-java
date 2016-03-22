@@ -1,7 +1,5 @@
 package datastructure;
 
-
-
 public class ArrayList<E>
 {
 	private transient int modCount = 0;
@@ -312,10 +310,10 @@ public class ArrayList<E>
 	{
 		subListRangeCheck(fromIndex, toIndex, size);
 		ArrayList<E> arrayList = new ArrayList<>();
-		
-		for(int i = fromIndex; i <= toIndex; i++)
+
+		for (int i = fromIndex; i <= toIndex; i++)
 			arrayList.add(get(i));
-		
+
 		return arrayList;
 	}
 
@@ -329,7 +327,6 @@ public class ArrayList<E>
 			throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public static <T> T[] copyOf(T[] original, int newLength)
 	{
