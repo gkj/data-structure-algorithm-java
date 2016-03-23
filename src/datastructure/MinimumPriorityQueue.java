@@ -13,6 +13,7 @@ public class MinimumPriorityQueue<Key extends Comparable<Key>>
 	private Class<Key> type;
 
 	// construct an empty priority queue with the given initial capacity.
+	@SuppressWarnings("unchecked")
 	public MinimumPriorityQueue(Class<Key> type, int initCapacity)
 	{
 		this.type = type;
@@ -28,6 +29,7 @@ public class MinimumPriorityQueue<Key extends Comparable<Key>>
 	}
 
 	// construct a priority queue from the array of keys.
+	@SuppressWarnings("unchecked")
 	public MinimumPriorityQueue(Key[] keys)
 	{
 		N = keys.length;
@@ -61,6 +63,7 @@ public class MinimumPriorityQueue<Key extends Comparable<Key>>
 	}
 
 	// helper function to double the size of the heap array
+	@SuppressWarnings("unchecked")
 	private void resize(int capacity)
 	{
 		assert capacity > N;

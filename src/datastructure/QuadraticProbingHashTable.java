@@ -190,6 +190,7 @@ public class QuadraticProbingHashTable<AnyType>
 		public AnyType element; // the element
 		public boolean isActive; // false if marked deleted
 
+		@SuppressWarnings("unused")
 		public HashEntry(AnyType e)
 		{
 			this(e, true);
@@ -214,6 +215,7 @@ public class QuadraticProbingHashTable<AnyType>
 	 * @param arraySize
 	 *            the size of the array.
 	 */
+	@SuppressWarnings("unchecked")
 	private void allocateArray(int arraySize)
 	{
 		array = new HashEntry[nextPrime(arraySize)];

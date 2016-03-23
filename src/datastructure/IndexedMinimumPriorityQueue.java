@@ -15,6 +15,7 @@ public class IndexedMinimumPriorityQueue<E extends Comparable<E>>
 	private int[] qp; // inverse of pq - qp[pq[i]] = pq[qp[i]] = i
 	private E[] keys; // keys[i] = priority of i
 
+	@SuppressWarnings("unchecked")
 	public IndexedMinimumPriorityQueue(int maxN)
 	{
 		if (maxN < 0)
