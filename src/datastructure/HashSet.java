@@ -65,4 +65,17 @@ public class HashSet<E>
 	{
 		return map.keys();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public HashSet<E> clone()
+	{
+		HashSet<E> clone = new HashSet<>();
+		
+		for(Object element : map.keys())
+		{
+			clone.add((E)element);
+		}
+		
+		return clone;
+	}
 }

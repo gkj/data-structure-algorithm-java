@@ -13,6 +13,12 @@ public class LinkedList<E>
 	{
 	}
 
+	public LinkedList(E[] array)
+	{
+		for (E element : array)
+			add(element);
+	}
+
 	private void linkFirst(E e)
 	{
 		final Node<E> f = first;
@@ -495,9 +501,9 @@ public class LinkedList<E>
 		}
 	}
 
-	public Object clone()
+	public LinkedList<E> clone()
 	{
-		LinkedList<E> clone = superClone();
+		LinkedList<E> clone = new LinkedList<>();
 
 		// Put clone into "virgin" state
 		clone.first = clone.last = null;

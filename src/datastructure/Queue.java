@@ -9,7 +9,7 @@ package datastructure;
  *            the type/class of elements held in this linked-list. The type of
  *            elements should be implements interface java.lang.Comparable
  */
-public class Queue<E extends Comparable<E>>
+public class Queue<E>
 {
 	private Node<E> front;
 	private Node<E> back;
@@ -54,7 +54,7 @@ public class Queue<E extends Comparable<E>>
 		Node<E> current = front;
 		while (current != null)
 		{
-			if (current.element.compareTo(element) == 0)
+			if (current.element.equals(element))
 				return true;
 
 			current = current.next;
@@ -226,7 +226,7 @@ public class Queue<E extends Comparable<E>>
 		return array;
 	}
 
-	class Node<T extends Comparable<T>>
+	class Node<T>
 	{
 		T element;
 		Node<T> next;

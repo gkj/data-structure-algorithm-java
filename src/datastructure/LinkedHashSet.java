@@ -66,4 +66,17 @@ public class LinkedHashSet<E>
 	{
 		return map.keys();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedHashSet<E> clone()
+	{
+		LinkedHashSet<E> clone = new LinkedHashSet<>();
+		
+		for(Object element : map.keys())
+		{
+			clone.add((E)element);
+		}
+		
+		return clone;
+	}
 }
