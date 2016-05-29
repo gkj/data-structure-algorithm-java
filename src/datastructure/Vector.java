@@ -4,32 +4,37 @@ public class Vector<E>
 {
 	private transient int modCount = 0;
 
-	protected Object[] elementData;
+	protected E[] elementData;
 
 	protected int elementCount;
 
 	protected int capacityIncrement;
+	
+	private Class<E> elementType;
 
-	public Vector(int initialCapacity, int capacityIncrement)
+	@SuppressWarnings("unchecked")
+	public Vector(int initialCapacity, int capacityIncrement, Class<E> elementType)
 	{
 		super();
 		if (initialCapacity < 0)
 			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
-		this.elementData = new Object[initialCapacity];
+		
+		this.elementType = elementType;
+		this.elementData = (E[]) java.lang.reflect.Array.newInstance(elementType, initialCapacity);
 		this.capacityIncrement = capacityIncrement;
 	}
 
-	public Vector(int initialCapacity)
+	public Vector(int initialCapacity, Class<E> elementType)
 	{
-		this(initialCapacity, 0);
+		this(initialCapacity, 0, elementType);
 	}
 
-	public Vector()
+	public Vector(Class<E> elementType)
 	{
-		this(10);
+		this(10, elementType);
 	}
 
-	public synchronized void copyInto(Object[] anArray)
+	public synchronized void copyInto(E[] anArray)
 	{
 		System.arraycopy(elementData, 0, anArray, 0, elementCount);
 	}
@@ -113,17 +118,17 @@ public class Vector<E>
 		return elementCount == 0;
 	}
 
-	public boolean contains(Object o)
+	public boolean contains(E o)
 	{
 		return indexOf(o, 0) >= 0;
 	}
 
-	public int indexOf(Object o)
+	public int indexOf(E o)
 	{
 		return indexOf(o, 0);
 	}
 
-	public synchronized int indexOf(Object o, int index)
+	public synchronized int indexOf(E o, int index)
 	{
 		if (o == null)
 		{
@@ -140,12 +145,12 @@ public class Vector<E>
 		return -1;
 	}
 
-	public synchronized int lastIndexOf(Object o)
+	public synchronized int lastIndexOf(E o)
 	{
 		return lastIndexOf(o, elementCount - 1);
 	}
 
-	public synchronized int lastIndexOf(Object o, int index)
+	public synchronized int lastIndexOf(E o, int index)
 	{
 		if (index >= elementCount)
 			throw new IndexOutOfBoundsException(index + " >= " + elementCount);
@@ -242,7 +247,7 @@ public class Vector<E>
 		elementData[elementCount++] = obj;
 	}
 
-	public synchronized boolean removeElement(Object obj)
+	public synchronized boolean removeElement(E obj)
 	{
 		modCount++;
 		int i = indexOf(obj);
@@ -281,16 +286,21 @@ public class Vector<E>
 		}
 	}
 
-	public synchronized Object[] toArray()
+	public synchronized E[] toArray()
 	{
-		return copyOf(elementData, elementCount);
+		@SuppressWarnings("unchecked")
+		E[] array = (E[]) java.lang.reflect.Array.newInstance(elementType, elementCount);
+		System.arraycopy(elementData, 0, array, 0, elementCount);
+		
+		return array;
+		
+		//return copyOf(elementData, elementCount);
 	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> T[] toArray(T[] a)
+	public synchronized E[] toArray(E[] a)
 	{
 		if (a.length < elementCount)
-			return (T[]) copyOf(elementData, elementCount, a.getClass());
+			return toArray();
 
 		System.arraycopy(elementData, 0, a, 0, elementCount);
 
@@ -301,11 +311,9 @@ public class Vector<E>
 	}
 
 	// Positional Access Operations
-
-	@SuppressWarnings("unchecked")
-	E elementData(int index)
+	public E elementData(int index)
 	{
-		return (E) elementData[index];
+		return elementData[index];
 	}
 
 	public synchronized E get(int index)
@@ -334,7 +342,7 @@ public class Vector<E>
 		return true;
 	}
 
-	public boolean remove(Object o)
+	public boolean remove(E o)
 	{
 		return removeElement(o);
 	}
@@ -382,7 +390,7 @@ public class Vector<E>
 
 	public synchronized Vector<E> subList(int fromIndex, int toIndex)
 	{
-		Vector<E> vector = new Vector<E>();
+		Vector<E> vector = new Vector<E>(elementType);
 		for (int i = fromIndex; i <= toIndex; i++)
 			vector.add(get(i));
 
@@ -402,17 +410,12 @@ public class Vector<E>
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T[] copyOf(T[] original, int newLength)
+	public E[] copyOf(E[] original, int newLength)
 	{
-		return (T[]) copyOf(original, newLength, original.getClass());
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T, U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType)
-	{
-		T[] copy = ((Object) newType == (Object) Object[].class) ? (T[]) new Object[newLength]
-				: (T[]) java.lang.reflect.Array.newInstance(newType.getComponentType(), newLength);
+		E[] copy = (E[]) java.lang.reflect.Array.newInstance(elementType, newLength);
 		System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
 		return copy;
+		
+		//return (T[]) copyOf(original, newLength, original.getClass());
 	}
 }

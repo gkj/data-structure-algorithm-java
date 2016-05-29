@@ -8,49 +8,57 @@ import datastructure.HashMap;
 
 public class DepthFirstSearch<T>
 {
-	private HashMap<T, Boolean> marked; // marked[v] = true if v is reachable
+	// marked[v] = true if v is reachable
+	private HashMap<T, Boolean> marked; 
+	
 	// from source (or sources)
 	private int count; // number of vertices reachable from s
 
+	private T[] vertices;
+	
 	/**
 	 * Computes the vertices in digraph <tt>G</tt> that are reachable from the
 	 * source vertex <tt>s</tt>.
 	 * 
-	 * @param G
+	 * @param graph
 	 *            the digraph
-	 * @param s
+	 * @param sourceVertex
 	 *            the source vertex
 	 */
-	@SuppressWarnings("unchecked")
-	public DepthFirstSearch(DirectedGraph<T> G, T s)
+	public DepthFirstSearch(DirectedGraph<T> graph, T sourceVertex)
 	{
-		marked = new HashMap<>();
-		for (Object vertex : G.getVertices().toArray())
-			marked.put((T) vertex, false);
+		vertices = graph.getVertices().toArray();
+		
+		marked = new HashMap<>(graph.getDataType(), Boolean.class);
+		
+		for (T vertex : vertices)
+			marked.put(vertex, false);
 
-		dfs(G, s);
+		dfs(graph, sourceVertex);
 	}
 
 	/**
 	 * Computes the vertices in digraph <tt>G</tt> that are connected to any of
 	 * the source vertices <tt>sources</tt>.
 	 * 
-	 * @param G
+	 * @param graph
 	 *            the graph
 	 * @param sources
 	 *            the source vertices
 	 */
-	@SuppressWarnings("unchecked")
-	public DepthFirstSearch(DirectedGraph<T> G, T[] sources)
+	public DepthFirstSearch(DirectedGraph<T> graph, T[] sources)
 	{
-		marked = new HashMap<>();
-		for (Object vertex : G.getVertices().toArray())
-			marked.put((T) vertex, false);
+		vertices = graph.getVertices().toArray();
+		
+		marked = new HashMap<>(graph.getDataType(), Boolean.class);
+		
+		for (T vertex : vertices)
+			marked.put(vertex, false);
 
 		for (T v : sources)
 		{
 			if (!marked.get(v))
-				dfs(G, v);
+				dfs(graph, v);
 		}
 	}
 
@@ -58,10 +66,8 @@ public class DepthFirstSearch<T>
 	{
 		count++;
 		marked.put(v, true);
-		for (Object object : G.getAdjacency(v).toArray())
+		for (T w : G.getAdjacency(v).toArray())
 		{
-			@SuppressWarnings("unchecked")
-			T w = (T) object;
 			if (!marked.get(w))
 				dfs(G, w);
 		}
@@ -102,7 +108,7 @@ public class DepthFirstSearch<T>
 		File file = new File("data/directedgraph/tinyDG.txt");
 		Scanner in = new Scanner(file);
 
-		DirectedGraph<Integer> graph = new DirectedGraph<>();
+		DirectedGraph<Integer> graph = new DirectedGraph<>(Integer.class);
 
 		while (in.hasNextLine())
 		{
@@ -128,7 +134,7 @@ public class DepthFirstSearch<T>
 		DepthFirstSearch<Integer> dfs = new DepthFirstSearch<>(graph, sources);
 
 		// print out vertices reachable from sources
-		for (Integer v: graph.getVertices().toArray(new Integer[graph.getVertices().size()]))
+		for (Integer v: graph.getVertices().toArray())
 		{
 			if (dfs.marked(v))
 				System.out.print(v + " ");

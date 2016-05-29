@@ -13,7 +13,9 @@ package datastructure;
  */
 public class LinkedHashMap<K, V>
 {
-
+	private Class<K> keyType;
+	private Class<V> valueType;
+	
 	static class Entry<K, V>
 	{
 		Entry<K, V> before, after;
@@ -139,7 +141,7 @@ public class LinkedHashMap<K, V>
 
 	final float loadFactor;
 
-	public LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)
+	public LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder, Class<K> keyType, Class<V> valueType)
 	{
 		if (initialCapacity < 0)
 			throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -150,22 +152,26 @@ public class LinkedHashMap<K, V>
 		this.loadFactor = loadFactor;
 		this.threshold = tableSizeFor(initialCapacity);
 		this.accessOrder = accessOrder;
+		this.keyType = keyType;
+		this.valueType = valueType;
 	}
 
-	public LinkedHashMap(int initialCapacity, float loadFactor)
+	public LinkedHashMap(int initialCapacity, float loadFactor, Class<K> keyType, Class<V> valueType)
 	{
-		this(initialCapacity, loadFactor, false);
+		this(initialCapacity, loadFactor, false, keyType, valueType);
 	}
 
-	public LinkedHashMap(int initialCapacity)
+	public LinkedHashMap(int initialCapacity, Class<K> keyType, Class<V> valueType)
 	{
-		this(initialCapacity, 0.75f);
+		this(initialCapacity, 0.75f, keyType, valueType);
 	}
 
-	public LinkedHashMap()
+	public LinkedHashMap(Class<K> keyType, Class<V> valueType)
 	{
 		this.loadFactor = 0.75f; // all other fields defaulted
 		this.accessOrder = false;
+		this.keyType = keyType;
+		this.valueType = valueType;
 	}
 
 	public LinkedHashMap(LinkedHashMap<? extends K, ? extends V> m)
@@ -212,10 +218,12 @@ public class LinkedHashMap<K, V>
 		return result;
 	}
 
-	public Object[] keys()
+	public K[] keys()
 	{
+		@SuppressWarnings("unchecked")
+		K[] result = (K[]) java.lang.reflect.Array.newInstance(keyType, size);
+		
 		int idx = 0;
-		Object[] result = new Object[size];
 
 		for (Entry<K, V> e = head; e != null; e = e.after)
 		{
@@ -225,10 +233,12 @@ public class LinkedHashMap<K, V>
 		return result;
 	}
 
-	public Object[] values()
+	public V[] values()
 	{
+		@SuppressWarnings("unchecked")
+		V[] result = (V[]) java.lang.reflect.Array.newInstance(valueType, size);
+		
 		int idx = 0;
-		Object[] result = new Object[size];
 
 		for (Entry<K, V> e = head; e != null; e = e.after)
 		{

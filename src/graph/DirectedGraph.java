@@ -10,28 +10,37 @@ import datastructure.LinkedList;
 
 public class DirectedGraph<T>
 {
+	private final Class<T> dataType;
+	private final Class<LinkedHashSet<T>> adjacencyType;
+	
 	private int totalEdges;
 	private LinkedList<T> vertices;
 	private HashMap<T, LinkedHashSet<T>> adjacency;
-
-	public DirectedGraph()
-	{
-		totalEdges = 0;
-		vertices = new LinkedList<>();
-		adjacency = new HashMap<>();
-	}
 	
+
+	@SuppressWarnings("unchecked")
+	public DirectedGraph(Class<T> dataType)
+	{
+		this.dataType = dataType;
+		adjacencyType = (Class<LinkedHashSet<T>>) new LinkedHashSet<T>(dataType).getClass();
+		
+		totalEdges = 0;
+		vertices = new LinkedList<>(dataType);
+		adjacency = new HashMap<>(dataType, adjacencyType);
+	}
+
 	public DirectedGraph(DirectedGraph<T> graph)
 	{
+		dataType = graph.getDataType();
+		adjacencyType = graph.getAdjacencyType();
+		
 		totalEdges = graph.getTotalEdges();
 		vertices = graph.getVertices().clone();
-		adjacency = new HashMap<>();
 		
-		Object[] temp = vertices.toArray();
-		for(Object object : temp)
+		adjacency = new HashMap<>(dataType, adjacencyType);
+
+		for (T vertex : vertices.toArray())
 		{
-			@SuppressWarnings("unchecked")
-			T vertex = (T) object;
 			adjacency.put(vertex, graph.getAdjacency(vertex).clone());
 		}
 	}
@@ -44,6 +53,16 @@ public class DirectedGraph<T>
 	public int getTotalEdges()
 	{
 		return totalEdges;
+	}
+	
+	public Class<T> getDataType()
+	{
+		return dataType;
+	}
+	
+	public Class<LinkedHashSet<T>> getAdjacencyType()
+	{
+		return adjacencyType;
 	}
 
 	private void validateVertex(T vertex)
@@ -64,7 +83,7 @@ public class DirectedGraph<T>
 		if (!adjacency.containsKey(vertex))
 		{
 			vertices.add(vertex);
-			adjacency.put(vertex, new LinkedHashSet<T>());
+			adjacency.put(vertex, new LinkedHashSet<T>(dataType));
 		}
 	}
 
@@ -92,7 +111,7 @@ public class DirectedGraph<T>
 
 	public LinkedList<T> getVertices()
 	{
-		return vertices.clone();
+		return vertices;
 	}
 
 	public LinkedHashSet<T> getAdjacency(T vertex)
@@ -103,16 +122,12 @@ public class DirectedGraph<T>
 
 	public String toString()
 	{
-		Object[] v = vertices.toArray();
 		StringBuilder sb = new StringBuilder();
-		for (Object object : v)
+		for (T vertex : vertices.toArray())
 		{
-			@SuppressWarnings("unchecked")
-			T vertex = (T) object;
 			sb.append(vertex);
 			sb.append(" : ");
-			Object[] adj = adjacency.get(vertex).toArray();
-			for (Object a : adj)
+			for (T a :  adjacency.get(vertex).toArray())
 			{
 				sb.append(a.toString());
 				sb.append(" ");
@@ -122,19 +137,19 @@ public class DirectedGraph<T>
 
 		return sb.toString();
 	}
-	
+
 	public DirectedGraph<T> clone()
 	{
 		return new DirectedGraph<T>(this);
 	}
-	
+
 	// unit testing
 	public static void main(String[] args) throws FileNotFoundException
 	{
 		File file = new File("data/directedgraph/tinyDAG.txt");
 		Scanner in = new Scanner(file);
 
-		DirectedGraph<Integer> graph = new DirectedGraph<>();
+		DirectedGraph<Integer> graph = new DirectedGraph<>(Integer.class);
 
 		while (in.hasNextLine())
 		{
@@ -143,14 +158,15 @@ public class DirectedGraph<T>
 
 			int from = Integer.parseInt(data[0].trim());
 			int to = Integer.parseInt(data[1].trim());
-			
+
 			graph.addVertex(from);
 			graph.addVertex(to);
 			graph.addEdge(from, to);
 		}
 
 		System.out.println(graph);
-		
+		System.out.println("Finished");
+
 		in.close();
 	}
 }

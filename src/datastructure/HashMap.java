@@ -13,6 +13,8 @@ package datastructure;
  */
 public class HashMap<K, V>
 {
+	private Class<K> keyType;
+	private Class<V> valueType;
 
 	static class Node<K, V>
 	{
@@ -138,7 +140,7 @@ public class HashMap<K, V>
 
 	final float loadFactor;
 
-	public HashMap(int initialCapacity, float loadFactor)
+	public HashMap(int initialCapacity, float loadFactor, Class<K> keyType, Class<V> valueType)
 	{
 		if (initialCapacity < 0)
 			throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -148,21 +150,27 @@ public class HashMap<K, V>
 			throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
 		this.loadFactor = loadFactor;
 		this.threshold = tableSizeFor(initialCapacity);
+		this.keyType = keyType;
+		this.valueType = valueType;
 	}
 
-	public HashMap(int initialCapacity)
+	public HashMap(int initialCapacity, Class<K> keyType, Class<V> valueType)
 	{
-		this(initialCapacity, 0.75f);
+		this(initialCapacity, 0.75f, keyType, valueType);
 	}
 
-	public HashMap()
+	public HashMap(Class<K> keyType, Class<V> valueType)
 	{
 		this.loadFactor = 0.75f; // all other fields defaulted
+		this.keyType = keyType;
+		this.valueType = valueType;
 	}
 
-	public HashMap(HashMap<? extends K, ? extends V> m)
+	public HashMap(HashMap<? extends K, ? extends V> m, Class<K> keyType, Class<V> valueType)
 	{
 		this.loadFactor = 0.75f;
+		this.keyType = keyType;
+		this.valueType = valueType;
 		putMapEntries(m, false);
 	}
 
@@ -212,11 +220,14 @@ public class HashMap<K, V>
 		return result;
 	}
 
-	public Object[] keys()
+	public K[] keys()
 	{
+		@SuppressWarnings("unchecked")
+		K[] result = (K[]) java.lang.reflect.Array.newInstance(keyType, size);
+		
 		int idx = 0;
 		int capacity = capacity();
-		Object[] result = new Object[size];
+		
 
 		for (int i = 0; i < capacity; i++)
 		{
@@ -234,11 +245,13 @@ public class HashMap<K, V>
 		return result;
 	}
 
-	public Object[] values()
+	public V[] values()
 	{
+		@SuppressWarnings("unchecked")
+		V[] result = (V[]) java.lang.reflect.Array.newInstance(valueType, size);
+		
 		int idx = 0;
 		int capacity = capacity();
-		Object[] result = new Object[size];
 
 		for (int i = 0; i < capacity; i++)
 		{

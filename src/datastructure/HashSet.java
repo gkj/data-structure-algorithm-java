@@ -15,20 +15,25 @@ public class HashSet<E>
 
 	// Dummy value to associate with an Object in the backing Map
 	private static final Object PRESENT = new Object();
+	
+	private Class<E> componentType;
 
-	public HashSet()
+	public HashSet(Class<E> componentType)
 	{
-		map = new HashMap<>();
+		this.componentType = componentType;
+		map = new HashMap<>(componentType, Object.class);
 	}
 
-	public HashSet(int initialCapacity, float loadFactor)
+	public HashSet(int initialCapacity, float loadFactor, Class<E> componentType)
 	{
-		map = new HashMap<>(initialCapacity, loadFactor);
+		this.componentType = componentType;
+		map = new HashMap<>(initialCapacity, loadFactor, componentType, Object.class);
 	}
 
-	public HashSet(int initialCapacity)
+	public HashSet(int initialCapacity, Class<E> componentType)
 	{
-		map = new HashMap<>(initialCapacity);
+		this.componentType = componentType;
+		map = new HashMap<>(initialCapacity, componentType, Object.class);
 	}
 
 	public int size()
@@ -61,7 +66,7 @@ public class HashSet<E>
 		map.clear();
 	}
 
-	public Object[] toArray()
+	public E[] toArray()
 	{
 		return map.keys();
 	}
@@ -69,7 +74,7 @@ public class HashSet<E>
 	@SuppressWarnings("unchecked")
 	public HashSet<E> clone()
 	{
-		HashSet<E> clone = new HashSet<>();
+		HashSet<E> clone = new HashSet<>(componentType);
 		
 		for(Object element : map.keys())
 		{

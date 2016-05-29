@@ -10,11 +10,13 @@ public class ArrayDeque<E>
 	private transient int tail;
 
 	private static final int MIN_INITIAL_CAPACITY = 8;
+	
+	private Class<E> elementType;
 
 	// ****** Array allocation and resizing utilities ******
 
 	@SuppressWarnings("unchecked")
-	private void allocateElements(int numElements)
+	private void allocateElements(int numElements, Class<E> elementType)
 	{
 		int initialCapacity = MIN_INITIAL_CAPACITY;
 		// Find the best power of two to hold elements.
@@ -32,7 +34,8 @@ public class ArrayDeque<E>
 			if (initialCapacity < 0) // Too many elements, must back off
 				initialCapacity >>>= 1;// Good luck allocating 2 ^ 30 elements
 		}
-		elements = (E[]) new Object[initialCapacity];
+		this.elementType = elementType;
+		elements = (E[]) java.lang.reflect.Array.newInstance(elementType, initialCapacity);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,7 +56,7 @@ public class ArrayDeque<E>
 		tail = n;
 	}
 
-	private <T> T[] copyElements(T[] a)
+	private E[] copyElements(E[] a)
 	{
 		if (head < tail)
 		{
@@ -69,14 +72,15 @@ public class ArrayDeque<E>
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayDeque()
+	public ArrayDeque(Class<E> elementType)
 	{
-		elements = (E[]) new Object[16];
+		this.elementType = elementType;
+		elements = (E[]) java.lang.reflect.Array.newInstance(elementType, 16);
 	}
 
-	public ArrayDeque(int numElements)
+	public ArrayDeque(int numElements, Class<E> elementType)
 	{
-		allocateElements(numElements);
+		allocateElements(numElements, elementType);
 	}
 
 	// The main insertion and extraction methods are addFirst,
@@ -368,17 +372,20 @@ public class ArrayDeque<E>
 		}
 	}
 
-	public Object[] toArray()
+	public E[] toArray()
 	{
-		return copyElements(new Object[size()]);
+		@SuppressWarnings("unchecked")
+		E[] a = (E[]) java.lang.reflect.Array.newInstance(elementType, size());
+		
+		return copyElements(a);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T[] toArray(T[] a)
+	public E[] toArray(E[] a)
 	{
 		int size = size();
 		if (a.length < size)
-			a = (T[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+			a = (E[]) java.lang.reflect.Array.newInstance(elementType, size);
 		copyElements(a);
 		if (a.length > size)
 			a[size] = null;

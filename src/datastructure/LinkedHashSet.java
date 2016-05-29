@@ -13,23 +13,25 @@ public class LinkedHashSet<E>
 {
 
 	private transient LinkedHashMap<E, Object> map;
+	private Class<E> componentType;
 
 	// Dummy value to associate with an Object in the backing Map
 	private static final Object PRESENT = new Object();
 
-	public LinkedHashSet()
+	public LinkedHashSet(Class<E> componentType)
 	{
-		map = new LinkedHashMap<>();
+		this.componentType = componentType;
+		map = new LinkedHashMap<>(componentType, Object.class);
 	}
 
-	public LinkedHashSet(int initialCapacity, float loadFactor)
+	public LinkedHashSet(int initialCapacity, float loadFactor, Class<E> componentType)
 	{
-		map = new LinkedHashMap<>(initialCapacity, loadFactor);
+		map = new LinkedHashMap<>(initialCapacity, loadFactor, componentType, Object.class);
 	}
 
-	public LinkedHashSet(int initialCapacity)
+	public LinkedHashSet(int initialCapacity, Class<E> componentType)
 	{
-		map = new LinkedHashMap<>(initialCapacity);
+		map = new LinkedHashMap<>(initialCapacity, componentType, Object.class);
 	}
 
 	public int size()
@@ -62,7 +64,7 @@ public class LinkedHashSet<E>
 		map.clear();
 	}
 
-	public Object[] toArray()
+	public E[] toArray()
 	{
 		return map.keys();
 	}
@@ -70,7 +72,7 @@ public class LinkedHashSet<E>
 	@SuppressWarnings("unchecked")
 	public LinkedHashSet<E> clone()
 	{
-		LinkedHashSet<E> clone = new LinkedHashSet<>();
+		LinkedHashSet<E> clone = new LinkedHashSet<>(componentType);
 		
 		for(Object element : map.keys())
 		{

@@ -2,8 +2,9 @@ package datastructure;
 
 public class Stack<E> extends Vector<E>
 {
-	public Stack()
+	public Stack(Class<E> elementType)
 	{
+		super(elementType);
 	}
 
 	public E push(E item)
@@ -38,7 +39,7 @@ public class Stack<E> extends Vector<E>
 		return size() == 0;
 	}
 
-	public synchronized int search(Object o)
+	public synchronized int search(E o)
 	{
 		int i = lastIndexOf(o);
 
@@ -47,10 +48,5 @@ public class Stack<E> extends Vector<E>
 			return size() - i;
 		}
 		return -1;
-	}
-	
-	public void printStack()
-	{
-		
 	}
 }

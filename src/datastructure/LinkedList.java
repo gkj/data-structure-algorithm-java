@@ -4,18 +4,20 @@ public class LinkedList<E>
 {
 	private transient int modCount = 0;
 	transient int size = 0;
-
 	transient Node<E> first;
-
 	transient Node<E> last;
+	private Class<E> elementType;
 
-	public LinkedList()
+	public LinkedList(Class<E> elementType)
 	{
+		this.elementType = elementType;
 	}
 
-	public LinkedList(E[] array)
+	public LinkedList(Class<E> elementType, E[] source)
 	{
-		for (E element : array)
+		this.elementType = elementType;
+		
+		for (E element : source)
 			add(element);
 	}
 
@@ -488,7 +490,7 @@ public class LinkedList<E>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private LinkedList<E> superClone()
 	{
 		try
@@ -503,7 +505,7 @@ public class LinkedList<E>
 
 	public LinkedList<E> clone()
 	{
-		LinkedList<E> clone = new LinkedList<>();
+		LinkedList<E> clone = new LinkedList<>(elementType);
 
 		// Put clone into "virgin" state
 		clone.first = clone.last = null;
@@ -517,29 +519,15 @@ public class LinkedList<E>
 		return clone;
 	}
 
-	public Object[] toArray()
+	public E[] toArray()
 	{
-		Object[] result = new Object[size];
+		@SuppressWarnings("unchecked")
+		E[] result = (E[]) java.lang.reflect.Array.newInstance(elementType, size);
+
 		int i = 0;
 		for (Node<E> x = first; x != null; x = x.next)
 			result[i++] = x.item;
 		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T[] toArray(T[] a)
-	{
-		if (a.length < size)
-			a = (T[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
-		int i = 0;
-		Object[] result = a;
-		for (Node<E> x = first; x != null; x = x.next)
-			result[i++] = x.item;
-
-		if (a.length > size)
-			a[size] = null;
-
-		return a;
 	}
 
 	public void printList()
