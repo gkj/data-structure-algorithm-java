@@ -135,7 +135,8 @@ public final class Fibonacci
 	// faster algorithm like Karatsuba multiplication.
 	private static BigInteger multiply(BigInteger x, BigInteger y)
 	{
-		return x.multiply(y);
+		//return x.multiply(y);
+		return KaratsubaMultiplication.multiply(x, y);
 	}
 
 }
